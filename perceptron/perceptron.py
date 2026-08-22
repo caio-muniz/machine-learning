@@ -1,82 +1,66 @@
-def perceptron(x1, x2, w1, w2, bias):
-    result = x1*w1 + x2*w2 + bias
+import numpy as np
+
+
+TOLERANCE = 1e-10
+
+
+def calculateWeightedSum(features, weights, bias):
+    result = np.dot(features, weights) + bias
 
     return result
+
 
 def activationFunction(value):
     if value >= 0:
         return 1
-    else: 
+    else:
         return 0
 
-def prediction(x1, x2, w1, w2, bias):
-    result = perceptron(x1, x2, w1, w2, bias)
 
-    value = activationFunction(result)
+def prediction(features, weights, bias):
+    result = calculateWeightedSum(features, weights, bias)
 
-    return value
-
-def updateWeights(w1, w2, bias, x1, x2, erro, learningRate):
-    newW1 = w1 + learningRate * erro * x1
-    newW2 = w2 + learningRate * erro * x2
-
-    newBias = bias + learningRate * erro
-
-    returnList = [newW1, newW2, newBias]
-
-    return returnList
+    return activationFunction(result)
 
 
-def train(data, labels, w1, w2, bias, learningRate, epochs):
-    i = 0
+def updateWeights(weights, bias, features, error, learningRate):
+    newWeights = weights + learningRate * error * np.array(features)
+    newBias = bias + learningRate * error
 
-    itens = [w1, w2, bias]
+    return newWeights, newBias
 
-    while i < epochs:
-        i2 = 0
-        while i2 < len(data):
-        
-            predict = prediction(data[i2][0], data[i2][1], itens[0], itens[1], itens[2])
 
-            erro = labels[i2] - predict
+def train(data, labels, learningRate, epochs):
+    weights = np.zeros(len(data[0]))
+    bias = 0
 
-            itens = updateWeights(itens[0], itens[1], itens[2], data[i2][0], data[i2][1], erro, learningRate)
+    for _ in range(epochs):
+        for features, label in zip(data, labels):
 
-            i2 += 1
-        i +=1
+            predict = prediction(features, weights, bias)
 
-    return itens
+            error = label - predict
 
-def evaluate(data, labels, w1, w2, bias):
-    predictList = []
-    right = 0
+            weights, bias = updateWeights(
+                weights,
+                bias,
+                features,
+                error,
+                learningRate
+            )
 
-    for item in data:
-        predictList.append(prediction(item[0], item[1], w1, w2, bias))
+    return weights, bias
 
-    i= 0 
-    while i < len(labels):
-        if predictList[i] == labels[i]:
-            right += 1
-        i += 1
 
-    accuracy = right / len(labels) * 100
+def evaluate(data, labels, weights, bias):
+    correct = 0
+
+    for features, label in zip(data, labels):
+        predict = prediction(features, weights, bias)
+
+        if predict == label:
+            correct += 1
+
+    accuracy = correct / len(labels) * 100
 
     return accuracy
-
-data = [
-    (1, 1),
-    (1, 2),
-    (2, 1),
-    (4, 4),
-    (5, 4),
-    (4, 5)
-]
-
-labels = [0, 0, 0, 1, 1, 1]
-
-labels = [0, 0, 0, 1, 1, 1]
-
-trainedWeights = train(data, labels, 0, 0, 0, 0.1, 5)
-print(trainedWeights)
-print(evaluate(data, labels, trainedWeights[0], trainedWeights[1], trainedWeights[2]))
