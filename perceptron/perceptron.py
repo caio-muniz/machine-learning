@@ -76,15 +76,7 @@ data = [
 labels = [0, 0, 0, 1, 1, 1]
 
 labels = [0, 0, 0, 1, 1, 1]
-print(train(data, labels, 0, 0, 0, 0.1, 5))
-print(evaluate(data, labels, 0.1, 0, -0.4))
 
-
-
-        
-        
-
-        
-
-
-    
+trainedWeights = train(data, labels, 0, 0, 0, 0.1, 5)
+print(trainedWeights)
+print(evaluate(data, labels, trainedWeights[0], trainedWeights[1], trainedWeights[2]))
