@@ -12,4 +12,3 @@ print(f"Training data: {X_train_processed.shape}")
 print(f"Test data: {X_test_processed.shape}")
 print(f"Minimum value: {X_train_processed.min()}")
 print(f"Maximum value: {X_train_processed.max()}")
-```
