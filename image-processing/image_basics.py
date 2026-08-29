@@ -2,24 +2,13 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 
+from utils.image_processing import (
+    normalizeImage,
+    resizeImage
+)
+
+
 image = Image.open("imagem.jpg")
-
-def getPixelInfo(image, x, y):
-    result = image.getpixel((x,y))
-
-    return result
-
-def resizeImage(image, width, height):
-    resizedImage = image.resize((width, height))
-
-    return resizedImage
-
-def normalizeImage(imageArray):
-    normalizedArray = imageArray/255
-
-    return normalizedArray
-
-
 
 imageArray = np.array(image)
 
@@ -29,13 +18,17 @@ blueChannel = imageArray[:, :, 2]
 
 grayImage = image.convert("L")
 
-print(grayImage.mode)
-print(np.array(grayImage).shape)
+resizedImage = resizeImage(grayImage, 128, 128)
+resizedArray = np.array(resizedImage)
 
-resized = resizeImage(grayImage, 128, 128)
-resizedArray = np.array(resized)
+normalizedImage = normalizeImage(resizedArray)
 
-normalizedResizedArray = normalizeImage(resizedArray)
+print(f"Original image: {imageArray.shape}")
+print(f"Grayscale image: {np.array(grayImage).shape}")
+print(f"Resized image: {resizedArray.shape}")
+print(f"Normalized range: {normalizedImage.min()} - {normalizedImage.max()}")
 
 plt.imshow(grayImage, cmap="gray")
+plt.title("Grayscale Image")
+plt.axis("off")
 plt.show()
