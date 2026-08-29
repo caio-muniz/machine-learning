@@ -1,30 +1,23 @@
 import numpy as np
 
-def getPixelInfo(image, x, y):
-    result = image.getpixel((x,y))
 
-    return result
+def getPixelInfo(image, x, y):
+    return image.getpixel((x, y))
+
 
 def resizeImage(image, width, height):
-    resizedImage = image.resize((width, height))
-
-    return resizedImage
+    return image.resize((width, height))
 
 
 def normalizeImage(imageArray):
-    normalizedArray = imageArray/255
-
-    return normalizedArray
+    return imageArray / 255
 
 
 def flattenImages(X):
-    arr = np.array(X)
-    flat = arr.reshape(arr.shape[0], -1)
-    
-    return flat
+    array = np.array(X)
+    return array.reshape(array.shape[0], -1)
+
 
 def preprocessImages(X):
-    flatX = flattenImages(X)
-    normalizedX = normalizeImage(flatX)
-    
-    return normalizedX
+    flattened = flattenImages(X)
+    return normalizeImage(flattened)
